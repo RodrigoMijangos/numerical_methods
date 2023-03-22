@@ -1,5 +1,5 @@
 from utility.util import *
-from responses.bisection_response import BisectionResponse
+from responses.responses import BisectionResponse
 
 from sympy.core import Function
 
