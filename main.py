@@ -1,0 +1,1 @@
+from numerical_methods.bisection_method import bisection
