@@ -1,5 +1,5 @@
 from utility.util import *
-from responses.responses import BisectionResponse
+from numerical_methods.responses.responses import BisectionResponse
 
 from sympy.core import Function
 
@@ -56,8 +56,8 @@ def generate_i(polarity: tuple[bool, bool], function: Function, parameters: tupl
     if n_row.ep is not None:
         if n_row.ep <= error:
             return results
-    if check_truncate_values(simplified.ik, simplified.a, accuracy_decimals) \
-            or check_truncate_values(simplified.ik, simplified.b, accuracy_decimals):
+    if check_truncate_values(n_row.ik, n_row.a, accuracy_decimals) \
+            or check_truncate_values(n_row.ik, n_row.b, accuracy_decimals):
         return results
     if root_founded(fk_i):
         return results
