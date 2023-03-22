@@ -6,11 +6,7 @@ from sympy.parsing.sympy_parser import parse_expr as parser, T
 
 
 def truncate(number: float, digits: int) -> float:
-    nb_decimals = len(str(number).split('.')[1])
-    if nb_decimals <= digits:
-        return number
-    stepper = 10 ** digits
-    return math.trunc(stepper * number) / stepper
+    return round(number, digits)
 
 
 def parse_expression(expression: str) -> Function:
@@ -46,3 +42,6 @@ def is_positive(value: float) -> bool:
 def root_founded(evaluation: float) -> bool:
     return evaluation == 0
 
+
+def check_truncate_values(a: float, b: float, decimals) -> bool:
+    return round(a, decimals) == round(b, decimals)
