@@ -1,12 +1,10 @@
-from utility.util import *
-from numerical_methods.responses.bisection_response import BisectionResponse
-
-from sympy.core import Function
+from utility.util import Response, BisectionResponse, Function,\
+    eval_expression, is_positive, assign_values, check_truncate_values, truncate, root_founded
 
 
 def bisection(parameters: tuple[float | int, float | int], function: Function,
               index: int = None, error: float | int = None, decimals: int = None,
-              show_decimals: int = None) -> list[BisectionResponse]:
+              show_decimals: int = None) -> list[Response]:
     if index is None:
         index = 50
     if error is None:
@@ -28,6 +26,7 @@ def bisection(parameters: tuple[float | int, float | int], function: Function,
 def generate_i(polarity: tuple[bool, bool], function: Function, parameters: tuple[float, float],
                index: int, error: float | int, accuracy_decimals: int, show_decimals: int,
                results: list[BisectionResponse] = None, last: BisectionResponse = None) -> list[BisectionResponse]:
+
     if results is None:
         results = list()
 
@@ -44,20 +43,19 @@ def generate_i(polarity: tuple[bool, bool], function: Function, parameters: tupl
     n_row = BisectionResponse(k, a, b, k_i, fk_i)
 
     if last is not None:
-        ep = abs(k_i - last.ik)
-        n_row.ep = ep
+        n_row.ep = abs(k_i - last.ik)
 
     simplified = simplify_data(n_row, show_decimals)
 
     results.append(simplified)
 
-    if n_row.k == index:
+    if k == index:
         return results
-    if n_row.ep is not None:
-        if n_row.ep <= error:
+    if simplified.ep is not None:
+        if simplified.ep <= error:
             return results
-    if check_truncate_values(n_row.ik, n_row.a, accuracy_decimals) \
-            or check_truncate_values(n_row.ik, n_row.b, accuracy_decimals):
+    if check_truncate_values(k_i, a, accuracy_decimals) or \
+            check_truncate_values(k_i, b, accuracy_decimals):
         return results
     if root_founded(fk_i):
         return results

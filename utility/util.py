@@ -1,8 +1,8 @@
-import math
-
 from sympy.core import Function
 from sympy.abc import x
 from sympy.parsing.sympy_parser import parse_expr as parser, T
+from numerical_methods.responses.newton_rapshon_response import NewtonRaphsonResponse, Response
+from numerical_methods.responses.multifunction_response import MultifunctionResponse, BisectionResponse
 
 
 def truncate(number: float, digits: int) -> float:
@@ -45,3 +45,10 @@ def root_founded(evaluation: float) -> bool:
 
 def check_truncate_values(a: float, b: float, decimals) -> bool:
     return round(a, decimals) == round(b, decimals)
+
+
+def to_print(obj: Response) -> str:
+    if isinstance(obj, BisectionResponse):
+        return f"{obj.k} \t {obj.a} \t {obj.b} \t {obj.ik} \t {obj.f_eval} \t {obj.ep}"
+    if isinstance(obj, MultifunctionResponse):
+        return f"{obj.k} \t {obj.a} \t {obj.b} \t {obj.fa_eval} \t {obj.fb_eval} \t {obj.ik} \t {obj.f_eval} \t {obj.ep}"
