@@ -1,5 +1,5 @@
-from utility.util import Response, BisectionResponse, Function,\
-    eval_expression, is_positive, assign_values, check_truncate_values, truncate, root_founded
+from utility.util import Response, BisectionResponse, Function, \
+    eval_expression, is_positive, assign_values, check_truncate_values, root_founded, simplify_data, is_done
 
 
 def bisection(parameters: tuple[float | int, float | int], function: Function,
@@ -49,30 +49,10 @@ def generate_i(polarity: tuple[bool, bool], function: Function, parameters: tupl
 
     results.append(simplified)
 
-    if k == index:
-        return results
-    if simplified.ep is not None:
-        if simplified.ep <= error:
-            return results
-    if check_truncate_values(k_i, a, accuracy_decimals) or \
-            check_truncate_values(k_i, b, accuracy_decimals):
-        return results
-    if root_founded(fk_i):
+    if is_done(index, accuracy_decimals, error, simplified):
         return results
 
     return generate_i(polarity, function, parameters, index, error, accuracy_decimals, show_decimals, results, n_row)
-
-
-def simplify_data(row: BisectionResponse, accuracy: int) -> BisectionResponse:
-    a = truncate(row.a, accuracy)
-    b = truncate(row.b, accuracy)
-    ki = truncate(row.ik, accuracy)
-    f_eval = truncate(row.f_eval, accuracy)
-    simplified = BisectionResponse(row.k, a, b, ki, f_eval)
-    if row.ep is not None:
-        ep = truncate(row.ep, accuracy)
-        simplified.ep = ep
-    return simplified
 
 
 def generate_range(a: float, b: float) -> float:

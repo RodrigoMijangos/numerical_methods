@@ -1,5 +1,5 @@
-from utility.util import Response, MultifunctionResponse, Function,\
-    eval_expression, check_truncate_values, truncate, root_founded
+from utility.util import Response, MultifunctionResponse, Function, \
+    eval_expression, simplify_data, is_done
 
 
 def secant(parameters: tuple[int | float, int | float], function: Function,
@@ -49,29 +49,10 @@ def generate_i(parameters: tuple[int | float, int | float], function: Function,
 
     results.append(simplified_row)
 
-    if k - 2 == index:
-        return results
-    if simplified_row.ep <= error:
-        return results
-    if check_truncate_values(a, k_i, accuracy_decimals) or \
-            check_truncate_values(b, k_i, accuracy_decimals):
-        return results
-    if root_founded(fk_i):
+    if is_done(index, accuracy_decimals, error, simplified_row):
         return results
 
     return generate_i(parameters, function, index, error, accuracy_decimals, show_decimals, results, row)
-
-
-def simplify_data(row: MultifunctionResponse, accuracy: int) -> MultifunctionResponse:
-    a = truncate(row.a, accuracy)
-    b = truncate(row.b, accuracy)
-    fa_eval = truncate(row.fa_eval, accuracy)
-    fb_eval = truncate(row.fb_eval, accuracy)
-    ik = truncate(row.ik, accuracy)
-    f_eval = truncate(row.f_eval, accuracy)
-    ep = truncate(row.ep, accuracy)
-
-    return MultifunctionResponse(row.k, a, b, fa_eval, fb_eval, ik, f_eval, ep)
 
 
 def generate_ki(a: int | float, b: int | float, fa_eval: int | float, fb_eval: int | float) -> int | float:

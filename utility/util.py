@@ -47,6 +47,43 @@ def check_truncate_values(a: float, b: float, decimals) -> bool:
     return round(a, decimals) == round(b, decimals)
 
 
+def simplify_data(row: Response, accuracy: int) -> Response:
+    ik = truncate(row.ik, accuracy)
+    f_eval = truncate(row.f_eval, accuracy)
+
+    if isinstance(row, BisectionResponse):
+        a = truncate(row.a, accuracy)
+        b = truncate(row.b, accuracy)
+        if isinstance(row, MultifunctionResponse):
+            fa_eval = truncate(row.fa_eval, accuracy)
+            fb_eval = truncate(row.fb_eval, accuracy)
+            simplified = MultifunctionResponse(row.k, a, b, fa_eval, fb_eval, ik, f_eval)
+        else:
+            simplified = BisectionResponse(row.k, a, b, ik, f_eval)
+    else:
+        simplified = Response(row. k, ik, f_eval)
+
+    if row.ep is not None:
+        simplified.ep = truncate(row.ep, accuracy)
+
+    return simplified
+
+
+def is_done(index: int, accuracy: int, error: int | float, row: Response) -> bool:
+    a = row.k == index
+    if row.ep is not None:
+        d = row.ep <= error
+    else:
+        d = False
+    e = root_founded(row.f_eval)
+    if isinstance(row, BisectionResponse):
+        b = check_truncate_values(row.a, row.ik, accuracy)
+        c = check_truncate_values(row.b, row.ik, accuracy)
+        return a or b or c or d or e
+
+    return a or d or e
+
+
 def to_print(obj: Response) -> str:
     if isinstance(obj, BisectionResponse):
         return f"{obj.k} \t {obj.a} \t {obj.b} \t {obj.ik} \t {obj.f_eval} \t {obj.ep}"
