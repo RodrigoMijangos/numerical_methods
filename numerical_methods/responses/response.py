@@ -1,9 +1,7 @@
-class BisectionResponse:
+class Response:
 
-    def __init__(self, k: int, a: float, b: float, ik: float, f_eval: float, ep: float = None):
+    def __init__(self, k: int, ik: float | int, f_eval: float | int, ep: int | float = None):
         self._k = k
-        self._a = a
-        self._b = b
         self._ik = ik
         self._f_eval = f_eval
         self._ep = ep
@@ -11,14 +9,6 @@ class BisectionResponse:
     @property
     def k(self):
         return self._k
-
-    @property
-    def a(self):
-        return self._a
-
-    @property
-    def b(self):
-        return self._b
 
     @property
     def ik(self):
@@ -33,5 +23,5 @@ class BisectionResponse:
         return self._ep
 
     @ep.setter
-    def ep(self, ep: float):
+    def ep(self, ep: float | int):
         self._ep = ep

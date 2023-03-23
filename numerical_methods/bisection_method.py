@@ -1,10 +1,10 @@
 from utility.util import *
-from numerical_methods.responses.responses import BisectionResponse
+from numerical_methods.responses.bisection_response import BisectionResponse
 
 from sympy.core import Function
 
 
-def bisection(parameters: tuple[float, float], function: Function,
+def bisection(parameters: tuple[float | int, float | int], function: Function,
               index: int = None, error: float | int = None, decimals: int = None,
               show_decimals: int = None) -> list[BisectionResponse]:
     if index is None:
