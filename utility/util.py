@@ -1,4 +1,4 @@
-from sympy.core import Function
+from sympy.core import Function, Float
 from sympy.abc import x
 from sympy.parsing.sympy_parser import parse_expr as parser, T
 from numerical_methods.responses.newton_rapshon_response import NewtonRaphsonResponse, Response
@@ -6,7 +6,7 @@ from numerical_methods.responses.multifunction_response import MultifunctionResp
 
 
 def truncate(number: float, digits: int) -> float:
-    return round(number, digits)
+    return Float(number, digits)
 
 
 def parse_expression(expression: str) -> Function:
@@ -44,7 +44,7 @@ def root_founded(evaluation: float) -> bool:
 
 
 def check_truncate_values(a: float, b: float, decimals) -> bool:
-    return round(a, decimals) == round(b, decimals)
+    return Float(a, decimals) == Float(b, decimals)
 
 
 def simplify_data(row: Response, accuracy: int) -> Response:
@@ -61,7 +61,11 @@ def simplify_data(row: Response, accuracy: int) -> Response:
         else:
             simplified = BisectionResponse(row.k, a, b, ik, f_eval)
     else:
-        simplified = Response(row. k, ik, f_eval)
+        if isinstance(row, NewtonRaphsonResponse):
+            df_eval = truncate(row.df_eval, accuracy)
+            simplified = NewtonRaphsonResponse(row.k, ik, f_eval, df_eval)
+        else:
+            simplified = Response(row.k, ik, f_eval)
 
     if row.ep is not None:
         simplified.ep = truncate(row.ep, accuracy)
@@ -85,6 +89,8 @@ def is_done(index: int, accuracy: int, error: int | float, row: Response) -> boo
 
 
 def to_print(obj: Response) -> str:
+    if isinstance(obj, NewtonRaphsonResponse):
+        return f"{obj.k} \t {obj.ik} \t {obj.f_eval} \t {obj.df_eval} \t {obj.ep}"
     if isinstance(obj, BisectionResponse):
         return f"{obj.k} \t {obj.a} \t {obj.b} \t {obj.ik} \t {obj.f_eval} \t {obj.ep}"
     if isinstance(obj, MultifunctionResponse):

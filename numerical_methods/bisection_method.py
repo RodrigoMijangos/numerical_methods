@@ -1,5 +1,5 @@
 from utility.util import Response, BisectionResponse, Function, \
-    eval_expression, is_positive, assign_values, check_truncate_values, root_founded, simplify_data, is_done
+    eval_expression, is_positive, assign_values, simplify_data, is_done
 
 
 def bisection(parameters: tuple[float | int, float | int], function: Function,
